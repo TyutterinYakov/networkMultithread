@@ -1,4 +1,4 @@
-package edu;
+package edu.simple;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,17 +9,24 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 
 public class SimpleClient extends Thread {
-	
-	@Override
+	private final static String[] COMMAND = {
+			"HELLO", "MORNING", "DAY", "EVENING"
+	};
+	private int cmdNumber;
+
+	public SimpleClient(int cmdNumber) {
+		this.cmdNumber = cmdNumber;
+	}
 	public void run() {
 		
 		try {
-			System.out.println("Started: "+LocalDateTime.now());
+		//	System.out.println("Started: "+LocalDateTime.now());
 			Socket client = new Socket("127.0.0.1",25525);
 		BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 		
-		String sb = "Yasha";
+		String command = COMMAND[cmdNumber%COMMAND.length];
+		String sb = command +" "+"Yasha";
 		bw.write(sb);
 		bw.newLine();
 		bw.flush();
@@ -30,7 +37,7 @@ public class SimpleClient extends Thread {
 		System.out.println("Client got string:  "+answer);
 		br.close();
 		bw.close();
-		System.out.println("Finished: "+LocalDateTime.now());
+	//	System.out.println("Finished: "+LocalDateTime.now());
 		} catch(IOException ex) {
 			ex.printStackTrace(System.out);
 		}
